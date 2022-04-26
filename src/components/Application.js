@@ -7,7 +7,6 @@ import useApplicationData from "hooks/useApplicationData";
 import "components/Application.scss";
 
 export default function Application(props) {
-
   const {
     state,
     setDay,
