@@ -44,7 +44,9 @@ export default function useApplicationData() {
           ...state.appointments,
           [action.id]: appointment
         };
-        return {...state, appointments: appointments}
+        const days = calculateSpots(action.id, state.days, state.appointments)
+        console.log(state.days)
+        return {...state, appointments: appointments, days: days}
       }
       case UPDATE_SPOTS: {
         const days = calculateSpots(action.id, state.days, state.appointments)
@@ -77,28 +79,14 @@ export default function useApplicationData() {
   
   function bookInterview(id, interview) {
     return new Promise((resolve, reject) => {
-      // const appointment = {
-      //   ...state.appointments[id],
-      //   interview: { ...interview }
-      // };
-      // const appointments = {
-      //   ...state.appointments,
-      //   [id]: appointment
-      // };
      axios.put(
         `http://localhost:8001/api/appointments/${id}`,
         {interview}
       )
       .then(res => {
-        // let newStateObj = {...state, appointments}
-        // setState(newStateObj)
         dispatch({ type: SET_INTERVIEW, id, interview });
         resolve()
-        // const days = calculateSpots(id, state.days, appointments)
-        // let updatedObj = {...newStateObj}
-        // updatedObj.days = days
-        // setState(updatedObj)
-        dispatch({ type: UPDATE_SPOTS, id});
+        // dispatch({ type: UPDATE_SPOTS, id});
       })
       .catch(res => {
         console.log(res);
@@ -121,7 +109,9 @@ export default function useApplicationData() {
       let data = JSON.parse(event.data)
       if (data.type === "SET_INTERVIEW") {
         console.log("data is ", data);
-        dispatch({type: data.type, id:data.id, interview:data.interview} )
+        dispatch({type: data.type, id:data.id, interview:data.interview})
+        dispatch({ type: UPDATE_SPOTS, id: data.id});
+
       } else{
         console.log("Message Received: ", event.data);
       }
@@ -134,26 +124,13 @@ export default function useApplicationData() {
   //function to cancel appointment
   function cancelInterview(id) {
     return new Promise((resolve, reject) => {
-      // const appointment = {
-      //   ...state.appointments[id], interview: null
-      // }
-      // const appointments = {
-      //   ...state.appointments,
-      //   [id]: appointment
-      // };
       axios.delete(
         `http://localhost:8001/api/appointments/${id}`
       )
       .then((res) => {
-        // let newStateObj = {...state, appointments}
         dispatch({ type: SET_INTERVIEW, id, interview: null });
-        // setState(newStateObj);
         resolve()
-        // const days = calculateSpots(id, state.days, appointments)
-        // let updatedObj = {...newStateObj}
-        // updatedObj.days = days
-        // setState(updatedObj)
-        dispatch({ type: UPDATE_SPOTS, id});
+        // dispatch({ type: UPDATE_SPOTS, id});
       })
       .catch(err => reject(err))
     })
