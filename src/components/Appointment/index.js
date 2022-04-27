@@ -8,6 +8,7 @@ import "./styles.scss";
 import useVisualMode from 'hooks/useVisualMode';
 import Form from './Form';
 import Error from './Error';
+import {useEffect} from "react";
 
 export default function Appointment(props) {
   const EMPTY = "EMPTY";
@@ -21,13 +22,23 @@ export default function Appointment(props) {
   const ERROR_DELETE = "ERROR_DELETE";
 
   const { mode, transition, back } = useVisualMode(
-    props.interview ? SHOW : EMPTY
+    props.interview !== null ? SHOW : EMPTY
   );
+
+  useEffect(() => {
+    if (props.interview && mode === EMPTY) {
+     transition(SHOW);
+    }
+    if (props.interview === null && mode === SHOW) {
+     transition(EMPTY);
+    }
+   }, [props.interview, transition, mode]);
+  
 
   function save(name, interviewer) {
     const interview = {
       student: name,
-      interviewer
+      interviewer: interviewer.id
     };
     transition(SAVING);
     props.bookInterview(props.id, interview)
@@ -37,9 +48,9 @@ export default function Appointment(props) {
     .catch(res => transition(ERROR_SAVE, true));
   }
 
-  function showConfirm() {
-    transition(CONFIRM)
-  }
+  // function showConfirm() {
+  //   transition(CONFIRM)
+  // }
   
   function onConfirm(id) {
     deleteInterview(id)
@@ -56,9 +67,9 @@ export default function Appointment(props) {
     .catch(() => transition(ERROR_DELETE, true))
   }
 
-  function onEdit() {
-    transition(EDIT)
-  }
+  // function onEdit() {
+  //   transition(EDIT)
+  // }
 
   function onClose() {
     back()
@@ -68,7 +79,7 @@ export default function Appointment(props) {
     <article className="appointment">
       <Header time={props.time} />
         {mode === EMPTY && <Empty onAdd={() => {transition(CREATE)}}/>}
-        {mode === SHOW && <Show id={props.id} student={props.interview.student} interviewer={props.interview.interviewer} showConfirm={showConfirm} onEdit={onEdit} />}
+        {mode === SHOW && props.interview && <Show id={props.id} student={props.interview.student} interviewer={props.interview.interviewer} showConfirm={() => transition(CONFIRM)} onEdit={() => transition(EDIT)} />}
         {mode === CREATE && <Form interviewers={props.interviewers} onCancel={() => {back(EMPTY)}} onSave={save} />}
         {mode === SAVING && <Status message={"Saving"} />}
         {mode === DELETING && <Status message={"Deleting"} />}

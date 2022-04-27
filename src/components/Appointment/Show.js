@@ -16,7 +16,7 @@ export default function Show(props) {
             className="appointment__actions-button"
             src="images/edit.png"
             alt="Edit"
-            onClick={() => props.onEdit(props.student, props.interviewer.name)}
+            onClick={() => props.onEdit()}
           />
           <img
             className="appointment__actions-button"

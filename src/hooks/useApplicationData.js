@@ -107,6 +107,30 @@ export default function useApplicationData() {
     })
   }
 
+  //websocket connection
+  useEffect(() => {
+    const ws = new WebSocket(
+      process.env.REACT_APP_WEBSOCKET_URL
+    )
+    ws.onopen = () =>{
+      console.log("opened connection")
+      ws.send("ping")
+    }
+    
+    ws.onmessage = function (event) {
+      let data = JSON.parse(event.data)
+      if (data.type === "SET_INTERVIEW") {
+        console.log("data is ", data);
+        dispatch({type: data.type, id:data.id, interview:data.interview} )
+      } else{
+        console.log("Message Received: ", event.data);
+      }
+      
+    }
+
+  }, [])
+  
+
   //function to cancel appointment
   function cancelInterview(id) {
     return new Promise((resolve, reject) => {
@@ -145,9 +169,9 @@ export default function useApplicationData() {
       }
       return initial;
     }, 0)
-    const array = updateObjectInArray(copyOfDays, id, spots)
-    // console.log("array is ", array)
-    return array;
+    //return new days array
+    const newDaysArray = updateObjectInArray(copyOfDays, day[0].id, spots)
+    return newDaysArray;
   }
 
   //function to spread array of days and update spot value
