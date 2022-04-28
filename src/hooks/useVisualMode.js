@@ -21,7 +21,6 @@ export default function useVisualMode(initial, nextMode) {
       prev = [...history]
     }
     setHistory(prev)
-    // setHistory((prev) => [...prev.slice(0, -1)]);
     setMode(prev[prev.length-1])
   }
   
