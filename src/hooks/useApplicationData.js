@@ -2,18 +2,11 @@ import {useEffect, useReducer} from "react";
 import axios from "axios";
 
 export default function useApplicationData() {
-  // const [state, setState] = useState({
-  //   day: "Monday",
-  //   days: [],
-  //   appointments: {},
-  //   interviewers: {}
-  // });
 
   //constants for reducer function
   const SET_DAY = "SET_DAY";
   const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
   const SET_INTERVIEW = "SET_INTERVIEW";
-  const UPDATE_SPOTS = "UPDATE_SPOTS"
 
   const [state, dispatch] = useReducer(reducer, {
       day: "Monday",
@@ -44,14 +37,9 @@ export default function useApplicationData() {
           ...state.appointments,
           [action.id]: appointment
         };
-        const days = calculateSpots(action.id, state.days, state.appointments)
-        console.log(state.days)
+        const days = calculateSpots(action.id, state.days, appointments)
         return {...state, appointments: appointments, days: days}
       }
-      case UPDATE_SPOTS: {
-        const days = calculateSpots(action.id, state.days, state.appointments)
-        return {...state, days: days}
-      };
       default:
         throw new Error(
           `Tried to reduce with unsupported action type: ${action.type}`
@@ -69,7 +57,6 @@ export default function useApplicationData() {
       axios.get("http://localhost:8001/api/interviewers")
     ])
     .then(all => {
-      // setState(prev => ({...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data }));
       const days = all[0].data;
       const appointments = all[1].data;
       const interviewers = all[2].data;
@@ -86,7 +73,6 @@ export default function useApplicationData() {
       .then(res => {
         dispatch({ type: SET_INTERVIEW, id, interview });
         resolve()
-        // dispatch({ type: UPDATE_SPOTS, id});
       })
       .catch(res => {
         console.log(res);
@@ -110,14 +96,10 @@ export default function useApplicationData() {
       if (data.type === "SET_INTERVIEW") {
         console.log("data is ", data);
         dispatch({type: data.type, id:data.id, interview:data.interview})
-        dispatch({ type: UPDATE_SPOTS, id: data.id});
-
       } else{
         console.log("Message Received: ", event.data);
       }
-      
     }
-
   }, [])
   
 
@@ -130,7 +112,6 @@ export default function useApplicationData() {
       .then((res) => {
         dispatch({ type: SET_INTERVIEW, id, interview: null });
         resolve()
-        // dispatch({ type: UPDATE_SPOTS, id});
       })
       .catch(err => reject(err))
     })
@@ -158,7 +139,6 @@ export default function useApplicationData() {
         // This isn't the item we care about - keep it as-is
         return item
       }
-  
       // Otherwise, this is the one we want - return an updated value
       return {
         ...item,
