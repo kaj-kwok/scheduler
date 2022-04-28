@@ -94,7 +94,7 @@ export default function useApplicationData() {
   function bookInterview(id, interview) {
     return new Promise((resolve, reject) => {
      axios.put(
-        `http://localhost:8001/api/appointments/${id}`,
+        `/api/appointments/${id}`,
         {interview}
       )
       .then(res => {
@@ -112,7 +112,7 @@ export default function useApplicationData() {
   function cancelInterview(id) {
     return new Promise((resolve, reject) => {
       axios.delete(
-        `http://localhost:8001/api/appointments/${id}`
+        `/api/appointments/${id}`
       )
       .then((res) => {
         dispatch({ type: SET_INTERVIEW, id, interview: null });
