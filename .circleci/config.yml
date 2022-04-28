@@ -18,7 +18,6 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
       - run: npm test
-
 deploy:
   machine:
     enabled: true
@@ -34,7 +33,6 @@ deploy:
         name: Push Master to Production
         command: |
           git push https://github.com/kaj-kwok/scheduler.git master:production
-
 workflows:
   version: 2
   test_and_deploy:
