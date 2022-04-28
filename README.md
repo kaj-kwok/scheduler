@@ -1,5 +1,9 @@
 # Interview Scheduler
 
+## LiveLink
+
+https://stellar-ganache-14d867.netlify.app/
+
 Interview Scheduler App, users can view the current available and booked appointments through the course of the week(Monday to Friday). Users can:
 
 - See current availability and book on available spots
@@ -8,7 +12,7 @@ Interview Scheduler App, users can view the current available and booked appoint
 
 ### Stack
 
-> React / Webpack / Babel / Axios / WebSockets
+> React / Webpack / Babel / Axios / WebSockets / Heroku API
 
 ## Screen Shots
 
