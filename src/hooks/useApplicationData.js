@@ -8,6 +8,7 @@ export default function useApplicationData() {
   const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
   const SET_INTERVIEW = "SET_INTERVIEW";
 
+  //reducer object
   const [state, dispatch] = useReducer(reducer, {
       day: "Monday",
       days: [],
@@ -52,9 +53,9 @@ export default function useApplicationData() {
   //get requests for days/appointments/interviewers, setState to update object
   useEffect(() => {
     Promise.all([
-      axios.get("http://localhost:8001/api/days"),
-      axios.get("http://localhost:8001/api/appointments"),
-      axios.get("http://localhost:8001/api/interviewers")
+      axios.get("/api/days"),
+      axios.get("/api/appointments"),
+      axios.get("/api/interviewers")
     ])
     .then(all => {
       const days = all[0].data;
@@ -63,6 +64,32 @@ export default function useApplicationData() {
       dispatch({ type: SET_APPLICATION_DATA, days, appointments, interviewers });
     }) 
   }, [])
+
+  //websocket connection
+  useEffect(() => {
+
+    //create websocket object
+    const ws = new WebSocket(
+      process.env.REACT_APP_WEBSOCKET_URL
+    )
+
+    //open connection 
+    ws.onopen = () =>{
+      console.log("opened connection");
+      ws.send("ping");
+    };
+    
+    //set to listen mode
+    ws.onmessage = function (event) {
+      let data = JSON.parse(event.data);
+      if (data.type === "SET_INTERVIEW") {
+        console.log("data is ", data);
+        dispatch({type: data.type, id:data.id, interview:data.interview});
+      } else{
+        console.log("Message Received: ", event.data);
+      }
+    };
+  }, []);
   
   function bookInterview(id, interview) {
     return new Promise((resolve, reject) => {
@@ -72,36 +99,14 @@ export default function useApplicationData() {
       )
       .then(res => {
         dispatch({ type: SET_INTERVIEW, id, interview });
-        resolve()
+        resolve();
       })
       .catch(res => {
         console.log(res);
-        reject()
+        reject();
       }); 
-    })
-  }
-
-  //websocket connection
-  useEffect(() => {
-    const ws = new WebSocket(
-      process.env.REACT_APP_WEBSOCKET_URL
-    )
-    ws.onopen = () =>{
-      console.log("opened connection")
-      ws.send("ping")
-    }
-    
-    ws.onmessage = function (event) {
-      let data = JSON.parse(event.data)
-      if (data.type === "SET_INTERVIEW") {
-        console.log("data is ", data);
-        dispatch({type: data.type, id:data.id, interview:data.interview})
-      } else{
-        console.log("Message Received: ", event.data);
-      }
-    }
-  }, [])
-  
+    });
+  };
 
   //function to cancel appointment
   function cancelInterview(id) {
@@ -119,16 +124,16 @@ export default function useApplicationData() {
 
   //function to calculate spots remaining
   function calculateSpots(id, days, appointments) {
-    const copyOfDays = [...days]
-    const day = days.filter(key => key.appointments.includes(id))
+    const copyOfDays = [...days];
+    const day = days.filter(key => key.appointments.includes(id));
     const spots = day[0].appointments.reduce((initial, appointment) => {
       if(appointments[appointment].interview === null) {
-        initial++
+        initial++;
       }
       return initial;
-    }, 0)
+    }, 0);
     //return new days array
-    const newDaysArray = updateObjectInArray(copyOfDays, day[0].id, spots)
+    const newDaysArray = updateObjectInArray(copyOfDays, day[0].id, spots);
     return newDaysArray;
   }
 
@@ -144,8 +149,8 @@ export default function useApplicationData() {
         ...item,
         spots
       }
-    })
-  }
+    });
+  };
 
   return { state, setDay, bookInterview, cancelInterview}
 }

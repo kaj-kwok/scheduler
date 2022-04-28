@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 export default function Empty(props) {
   return (
@@ -10,5 +10,5 @@ export default function Empty(props) {
         onClick={props.onAdd}
       />
     </main>
-  )
-}
+  );
+};

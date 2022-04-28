@@ -1,5 +1,5 @@
-import React from 'react'
-import Button from "../Button"
+import React from 'react';
+import Button from "../Button";
 
 export default function Confirm(props) {
   return (
@@ -11,4 +11,4 @@ export default function Confirm(props) {
       </section>
     </main>
   );
-}
+};

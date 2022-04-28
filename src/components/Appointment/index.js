@@ -46,34 +46,26 @@ export default function Appointment(props) {
       transition(SHOW);
     })
     .catch(res => transition(ERROR_SAVE, true));
-  }
-
-  // function showConfirm() {
-  //   transition(CONFIRM)
-  // }
+  };
   
   function onConfirm(id) {
-    deleteInterview(id)
-  }
+    deleteInterview(id);
+  };
 
   function onCancel(){
     back(SHOW);
-  }
+  };
 
   function deleteInterview(id) {
     transition(DELETING, true);
     props.cancelInterview(id)
     .then(() => transition(EMPTY))
     .catch(() => transition(ERROR_DELETE, true))
-  }
-
-  // function onEdit() {
-  //   transition(EDIT)
-  // }
+  };
 
   function onClose() {
-    back()
-  }
+    back();
+  };
 
   return (
     <article className="appointment">
@@ -89,5 +81,5 @@ export default function Appointment(props) {
         {mode === ERROR_SAVE && <Error  message={"save"} onClose={onClose} />}
         {/* {props.interview ? <Show student={props.interview.student} interviewer={props.interview.interviewer}/> : <Empty />} */}
     </article>
-  )
-}
+  );
+};

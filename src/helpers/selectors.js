@@ -1,5 +1,6 @@
+//retrieve all appointments for a given day
 export function getAppointmentsForDay(state, day) {
-  let temp = []
+  let temp = [];
   const appointment = [];
   state.days.map((x) => {
     if(x.name === day){
@@ -7,13 +8,14 @@ export function getAppointmentsForDay(state, day) {
     } else{
       return null;
     }
-  })
+  });
   for (const ele of temp) {
-    appointment.push(state.appointments[ele])
+    appointment.push(state.appointments[ele]);
   }
-  return appointment
-}
+  return appointment;
+};
 
+//retrieve an interview object
 export function getInterview(state, interview) {
   const obj = {};
   if(interview === null) {
@@ -22,21 +24,22 @@ export function getInterview(state, interview) {
     obj["student"] = interview.student;
     obj["interviewer"] = state.interviewers[interview.interviewer]
     return obj;
-  }
+  };
 };
 
+//retrieve all interviewers for a day
 export function getInterviewersForDay(state, day) {
-  let temp = []
+  let temp = [];
   let interviewers = [];
   state.days.map((x) => {
-    if(x.name === day){
+    if(x.name === day) {
       return temp = [...x.interviewers];
-    } else{
+    } else {
       return null;
     }
-  })
+  });
   for (const ele of temp) {
-    interviewers.push(state.interviewers[ele])
+    interviewers.push(state.interviewers[ele]);
   }
-  return interviewers
-}
+  return interviewers;
+};
