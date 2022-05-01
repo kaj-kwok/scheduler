@@ -28,6 +28,15 @@ Interview Scheduler App, users can view the current available and booked appoint
 
 Install dependencies with `npm install`.
 
+## Dependencies
+axios / classnames / normalize.css / react / react-dom / react-scripts
+
+## Dev Dependencies
+babel/core / storybook/addon-actions / storybook/addon-backgrounds / storybook/addon-links / storybook/addons / storybook/react / testing-library/jest-dom / testing-library/react / testing-library/react-hooks / babel-loader / cypress / node-sass / prop-types / react-test-renderer
+
+## scheduler API
+required api server available at https://github.com/kaj-kwok/scheduler-api
+
 ## Running Webpack Development Server
 
 ```sh
