@@ -3,6 +3,7 @@
 ## LiveLink
 
 https://stellar-ganache-14d867.netlify.app/
+(may require refresh to load from api hosted on heroku)
 
 Interview Scheduler App, users can view the current available and booked appointments through the course of the week(Monday to Friday). Users can:
 
